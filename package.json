@@ -8,23 +8,51 @@
   "license": "UNLICENSED",
   "private": true,
   "scripts": {
+    "pretest": "yarn run posttest && $npm_package_docker_test_install",
+    "posttest": "$npm_package_docker_test_down && $npm_package_docker_test_prune",
+    "test": "$npm_package_docker_test_test",
     "prestart": "$npm_package_docker_dev_install",
     "start": "$npm_package_docker_dev_up",
     "stop": "$npm_package_docker_dev_down",
-    "terminal": "docker exec -it ohbehaveserver_app_1 /bin/bash"
+    "terminal": "docker exec -it ohbehaveserver_app_1 /bin/bash",
+    "prelint": "$npm_package_docker_test_install",
+    "lint": "$npm_package_docker_test_lint",
+    "postlint": "$npm_package_docker_test_down",
+    "precoverage": "yarn run postcoverage && $npm_package_docker_test_install",
+    "coverage": "$npm_package_docker_test_coverage",
+    "postcoverage": "$npm_package_docker_test_down && $npm_package_docker_test_prune",
+    "test:ci": "yarn run lint:run && ./node_modules/.bin/mocha --reporter mocha-junit-reporter --reporter-options mochaFile=./coverage/test-results.xml",
+    "test:run": "yarn run lint:run && ./node_modules/.bin/mocha --reporter spec",
+    "lint:run": "./node_modules/.bin/eslint \"src/**/*.js\"",
+    "coverage:run": "./node_modules/.bin/nyc yarn run test:ci"
   },
   "docker": {
     "dev": {
       "install": "docker-compose -p ohbehaveserver run --no-deps --entrypoint yarn app",
       "up": "docker-compose -p ohbehaveserver up",
       "down": "docker-compose -p ohbehaveserver down"
+    },
+    "test": {
+      "install": "docker-compose -p ohbehaveservertest -f test/docker-compose.yml run --no-deps --entrypoint yarn test",
+      "test": "docker-compose -p ohbehaveservertest -f test/docker-compose.yml run test",
+      "coverage": "docker-compose -p ohbehaveservertest -f test/docker-compose.yml run --entrypoint yarn test run coverage:run",
+      "lint": "docker-compose -p ohbehaveservertest -f test/docker-compose.yml run --entrypoint yarn test run lint:run",
+      "down": "docker-compose -p ohbehaveservertest -f test/docker-compose.yml down",
+      "prune": "docker volume prune --filter label=io.as3.appname=oh-behave-server --filter label=io.as3.env=test --filter label=io.as3.discard=true --force"
     }
   },
   "devDependencies": {
+    "chai": "^4.1.2",
+    "chai-as-promised": "^7.1.1",
     "eslint": "^4.18.1",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.9.0",
-    "gulp": "^3.9.1"
+    "gulp": "^3.9.1",
+    "mocha": "^5.0.1",
+    "mocha-junit-reporter": "^1.17.0",
+    "nyc": "^11.4.1",
+    "sinon": "^4.4.2",
+    "supertest": "^3.0.0"
   },
   "dependencies": {
     "apollo-server-express": "^1.3.2",

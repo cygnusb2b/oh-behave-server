@@ -1,0 +1,30 @@
+version: '3'
+services:
+  test:
+    build: ../
+    volumes:
+      - ../:/app:cached
+      - node_modules:/app/node_modules
+    depends_on:
+      - mongo
+    entrypoint: yarn run test:run
+    environment:
+      NODE_ENV: test
+      MONGO_DSN: mongodb://mongo:27017/oh-behave
+      REDIS_DSN: redis://redis:6379/0
+      PORT: 8200
+  mongo:
+    image: mongo:3.4
+    volumes:
+      - mongodb:/data/db
+
+volumes:
+  node_modules:
+    labels:
+      io.as3.appname: "oh-behave-server"
+      io.as3.env: "test"
+  mongodb:
+    labels:
+      io.as3.appname: "oh-behave-server"
+      io.as3.discard: "true"
+      io.as3.env: "test"
