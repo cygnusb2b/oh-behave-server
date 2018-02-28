@@ -1,11 +1,11 @@
 type Query {
   ping: String!
   allProperties(sort: PropertySortInput = {}): [Property]
-  property(key: String!): Property!
+  property(id: String!): Property!
 }
 
 type Property {
-  key: String!
+  id: String!
   name: String!
   version: String!
 }

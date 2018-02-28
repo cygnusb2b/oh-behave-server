@@ -21,14 +21,14 @@ describe('graph/resolvers', function() {
       const query = `
         query AllProperties {
           allProperties {
-            key
+            id
             name
             version
           }
         }
       `;
 
-      const property = new Property({ key: 'test', name: 'Test Property', version: '3' });
+      const property = new Property({ name: 'Test Property', version: '3' });
       before(async function() {
         await Property.remove();
         await property.save();
@@ -42,7 +42,7 @@ describe('graph/resolvers', function() {
         const data = await graphql({ query, key: 'allProperties' });
         expect(data).to.be.an('array');
         const prop = data[0];
-        expect(prop.key).to.equal(property.key);
+        expect(prop.id).to.equal(property.id);
         expect(prop.name).to.equal(property.name);
         expect(prop.version).to.equal(property.version);
       });
@@ -50,25 +50,25 @@ describe('graph/resolvers', function() {
 
     describe('property', function() {
       const query = `
-        query Property($key: String!) {
-          property(key: $key) {
-            key
+        query Property($id: String!) {
+          property(id: $id) {
+            id
             name
             version
           }
         }
       `;
-      it('should reject when the key is not provided.', async function() {
+      it('should reject when the id is not provided.', async function() {
         const variables = {};
         await expect(graphql({ query, key: 'property', variables })).to.be.rejectedWith(Error, /required type/i);
       });
       it('should reject when the property does not exist.', async function() {
-        const key = 'this does not exist';
-        const variables = { key };
+        const id = '5410f4f507f3a09970ac8e2e';
+        const variables = { id };
         await expect(graphql({ query, key: 'property', variables })).to.be.rejectedWith(Error, /no property found/i);
       });
 
-      const property = new Property({ key: 'test', name: 'Test Property', version: '3' });
+      const property = new Property({ name: 'Test Property', version: '3' });
       before(async function() {
         await Property.remove();
         await property.save();
@@ -78,13 +78,13 @@ describe('graph/resolvers', function() {
         return Property.remove();
       });
       it('should return requested property.', async function() {
-        const key = property.key;
-        const variables = { key };
+        const id = property.id;
+        const variables = { id };
         const promise = graphql({ query, key: 'property', variables });
         await expect(promise).to.eventually.be.an('object');
         const prop = await promise;
 
-        expect(prop.key).to.equal(property.key);
+        expect(prop.id).to.equal(property.id);
         expect(prop.name).to.equal(property.name);
         expect(prop.version).to.equal(property.version);
       });

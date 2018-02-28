@@ -15,9 +15,9 @@ module.exports = {
       return Property.find().sort({ [field]: order });
     },
 
-    property: async (root, { key }) => {
-      const property = await Property.findOne({ key });
-      if (!property) throw new Error(`No property found for key '${key}'`);
+    property: async (root, { id }) => {
+      const property = await Property.findOne({ _id: id });
+      if (!property) throw new Error(`No property found for ID '${id}'`);
       return property;
     },
   },
