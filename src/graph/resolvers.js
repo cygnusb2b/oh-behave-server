@@ -10,7 +10,10 @@ module.exports = {
      */
     ping: () => 'pong',
 
-    allProperties: (root, { sort }) => Property.find(sort),
+    allProperties: (root, { sort }) => {
+      const { field, order } = sort;
+      return Property.find().sort({ [field]: order });
+    },
 
     property: async (root, { key }) => {
       const property = await Property.findOne({ key });
