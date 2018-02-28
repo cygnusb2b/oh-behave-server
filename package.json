@@ -1,0 +1,42 @@
+{
+  "name": "oh-behave-server",
+  "version": "1.0.0",
+  "description": "Behavioral marketing backend - oh behave!",
+  "main": "src/index.js",
+  "repository": "https://github.com/cygnusb2b/oh-behave-server.git",
+  "author": "Jacob Bare <jbare@southcomm.com>",
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "prestart": "$npm_package_docker_dev_install",
+    "start": "$npm_package_docker_dev_up",
+    "stop": "$npm_package_docker_dev_down",
+    "terminal": "docker exec -it ohbehaveserver_app_1 /bin/bash"
+  },
+  "docker": {
+    "dev": {
+      "install": "docker-compose -p ohbehaveserver run --no-deps --entrypoint yarn app",
+      "up": "docker-compose -p ohbehaveserver up",
+      "down": "docker-compose -p ohbehaveserver down"
+    }
+  },
+  "devDependencies": {
+    "eslint": "^4.18.1",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-plugin-import": "^2.9.0",
+    "gulp": "^3.9.1"
+  },
+  "dependencies": {
+    "apollo-server-express": "^1.3.2",
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "dotenv": "^5.0.1",
+    "express": "^4.16.2",
+    "graphql": "^0.13.1",
+    "graphql-import": "^0.4.5",
+    "graphql-tools": "^2.21.0",
+    "helmet": "^3.11.0",
+    "mongodb": "^3.0.3",
+    "mongoose": "^5.0.7"
+  }
+}
