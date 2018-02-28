@@ -1,3 +1,20 @@
 type Query {
   ping: String!
+  allProperties(sort: PropertySortInput = {}): [Property]
+  property(key: String!): Property!
+}
+
+type Property {
+  key: String!
+  name: String!
+  version: String!
+}
+
+enum PropertySortField {
+  name
+}
+
+input PropertySortInput {
+  field: PropertySortField! = name
+  order: Int! = 1
 }
