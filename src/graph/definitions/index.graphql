@@ -1,20 +1,25 @@
+# import * from 'property.graphql'
+# import * from 'user.graphql'
+
+scalar Date
+scalar Cursor
+
 type Query {
   ping: String!
-  allProperties(sort: PropertySortInput = {}): [Property]
-  property(id: String!): Property!
 }
 
-type Property {
+input ModelIdInput {
   id: String!
-  name: String!
-  version: String!
 }
 
-enum PropertySortField {
-  name
+type PageInfo {
+  hasNextPage: Boolean!
+  endCursor: Cursor
+  # hasPreviousPage: Boolean!
+  # startCursor: Cursor
 }
 
-input PropertySortInput {
-  field: PropertySortField! = name
-  order: Int! = 1
+input PaginationInput {
+  first: Int! = 25
+  after: Cursor
 }

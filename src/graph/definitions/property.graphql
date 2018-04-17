@@ -1,0 +1,66 @@
+type Query {
+  allProperties(pagination: PaginationInput = {}, sort: PropertySortInput = {}): PropertyConnection!
+  searchProperties(pagination: PaginationInput = {}, search: PropertySearchInput!): PropertyConnection!
+  property(input: ModelIdInput!): Property!
+}
+
+type Mutation {
+  createProperty(input: CreatePropertyInput!): Property!
+  updateProperty(input: UpdatePropertyInput!): Property!
+  deleteProperty(input: ModelIdInput!): String!
+}
+
+type PropertyConnection {
+  totalCount: Int!
+  edges: [PropertyEdge]!
+  pageInfo: PageInfo!
+}
+
+type PropertyEdge {
+  node: Property!
+  cursor: Cursor!
+}
+
+input PropertySearchInput {
+  typeahead: PropertyTypeaheadInput!
+}
+
+input PropertyTypeaheadInput {
+  field: PropertyTypeAheadField!
+  term: String!
+}
+
+input PropertySortInput {
+  field: PropertySortField! = createdAt
+  order: Int! = -1
+}
+
+input PropertyPayloadInput {
+  name: String!
+  website: String
+  description: String
+}
+
+input CreatePropertyInput {
+  payload: PropertyPayloadInput!
+}
+
+input UpdatePropertyInput {
+  id: String!
+  payload: PropertyPayloadInput!
+}
+
+enum PropertySortField {
+  name
+  createdAt
+  updatedAt
+}
+
+enum PropertyTypeAheadField {
+  name
+}
+
+type Property {
+  id: String!
+  name: String!
+}
