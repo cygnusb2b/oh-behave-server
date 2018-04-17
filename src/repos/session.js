@@ -5,13 +5,13 @@ const uuidv5 = require('uuid/v5');
 const bcrypt = require('bcrypt');
 const redis = require('../redis');
 
-const { SESSION_GLOBAL_SECRET, SESSION_NAMESPACE, SESSION_EXPIRES } = process.env;
+const { SESSION_GLOBAL_SECRET, SESSION_NAMESPACE_UUID, SESSION_EXPIRES } = process.env;
 
 const SETTINGS = {
   globalSecret: SESSION_GLOBAL_SECRET,
   saltRounds: 5, // For user secret bcrypt.
-  namespace: SESSION_NAMESPACE, // Namespace for UUIDv5.
-  expires: SESSION_EXPIRES,
+  namespace: SESSION_NAMESPACE_UUID, // Namespace for UUIDv5.
+  expires: parseInt(SESSION_EXPIRES, 10),
   idPrefix: 'session:id', // Cache prefix.
   userPrefix: 'session:user', // Cache prefix.
 };
