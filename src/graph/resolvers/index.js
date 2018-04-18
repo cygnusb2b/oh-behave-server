@@ -6,8 +6,9 @@ const user = require('./user');
 const taxonomy = require('./taxonomy');
 const company = require('./company');
 const section = require('./section');
+const contentQuery = require('./content-query');
 
-module.exports = deepAssign(property, user, taxonomy, company, section, {
+module.exports = deepAssign(property, user, taxonomy, company, section, contentQuery, {
   Date: DateType,
   Cursor: CursorType,
   /**

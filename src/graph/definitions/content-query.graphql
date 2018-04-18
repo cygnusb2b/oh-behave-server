@@ -1,0 +1,75 @@
+type Query {
+  allContentQueries(pagination: PaginationInput = {}, sort: ContentQuerySortInput = {}): ContentQueryConnection!
+  contentQuery(input: ModelIdInput!): ContentQuery!
+}
+
+type Mutation {
+  createContentQuery(input: CreateContentQueryInput!): ContentQuery!
+  updateContentQuery(input: UpdateContentQueryInput!): ContentQuery!
+  deleteContentQuery(input: ModelIdInput!): String!
+}
+
+type ContentQueryConnection {
+  totalCount: Int!
+  edges: [ContentQueryEdge]!
+  pageInfo: PageInfo!
+}
+
+type ContentQueryEdge {
+  node: ContentQuery!
+  cursor: Cursor!
+}
+
+input ContentQuerySortInput {
+  field: ContentQuerySortField! = createdAt
+  order: Int! = -1
+}
+
+input ContentQueryPayloadInput {
+  name: String!
+  propertyId: String!
+  criteria: [ContentQueryCriteriaInput]
+}
+
+enum ContentQueryCriteriaModelField {
+  Company
+  Section
+  Taxonomy
+}
+
+input ContentQueryCriteriaInput {
+  type: ContentQueryCriteriaModelField!
+  ids: [Int!]!
+}
+
+input CreateContentQueryInput {
+  payload: ContentQueryPayloadInput!
+}
+
+input UpdateContentQueryInput {
+  id: String!
+  payload: ContentQueryPayloadInput!
+}
+
+enum ContentQuerySortField {
+  name
+  createdAt
+  updatedAt
+}
+
+type ContentQuery {
+  id: String!
+  name: String!
+  criteria: [ContentQueryCriteria]
+  createdBy: User
+  updatedBy: User
+  createdAt: Date
+  updatedAt: Date
+}
+
+union ContentQueryItem = Taxonomy | Section | Company
+
+type ContentQueryCriteria {
+  type: ContentQueryCriteriaModelField!
+  items: [ContentQueryItem]!
+}
