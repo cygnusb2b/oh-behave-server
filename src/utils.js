@@ -1,0 +1,44 @@
+const db = require('./db');
+
+const baseVersions = ['3', '4'];
+
+const supportsVersion = v => baseVersions.includes(v);
+
+const validateKey = (key) => {
+  if (!key) throw new Error('No property key was provided.');
+  return true;
+};
+
+const validateVersion = (v) => {
+  if (!supportsVersion(v)) {
+    throw new Error(`The provided Base version of '${v}' is not supported.`);
+  }
+  return true;
+};
+
+const validate = (key, version) => {
+  validateKey(key);
+  validateVersion(version);
+  return true;
+};
+
+const getBaseConn = (key, version) => {
+  validate(key, version);
+  if (version === '4') return db.platform;
+  return db.legacy;
+};
+
+const getBaseDbName = (key, version) => {
+  validate(key, version);
+  if (version === '4') return `${key}_platform`;
+  return `base_${key}`;
+};
+
+const getTaxonomyCollection = (key, version) => {
+  const dbName = getBaseDbName(key, version);
+  return getBaseConn(key, version).collection(dbName, 'Taxonomy');
+};
+
+module.exports = {
+  getTaxonomyCollection,
+};
