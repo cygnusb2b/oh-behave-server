@@ -1,0 +1,8 @@
+type Query {
+  searchCompanies(property: String!, phrase: String!): [Company]
+}
+
+type Company {
+  id: Int!
+  name: String!
+}

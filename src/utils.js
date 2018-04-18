@@ -40,6 +40,11 @@ const getTaxonomyCollection = (key, version) => {
   return getBaseConn(key, version).collection(dbName, 'Taxonomy');
 };
 
+const getContentCollection = (key, version) => {
+  const dbName = getBaseDbName(key, version);
+  return getBaseConn(key, version).collection(dbName, 'Content');
+};
+
 const searchRegex = (phrase, type) => {
   let prefix = '';
   let suffix = '';
@@ -50,5 +55,6 @@ const searchRegex = (phrase, type) => {
 
 module.exports = {
   getTaxonomyCollection,
+  getContentCollection,
   searchRegex,
 };

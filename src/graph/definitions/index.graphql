@@ -1,6 +1,7 @@
 # import * from 'property.graphql'
 # import * from 'user.graphql'
 # import * from 'taxonomy.graphql'
+# import * from 'company.graphql'
 
 scalar Date
 scalar Cursor
