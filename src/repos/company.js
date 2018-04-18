@@ -1,6 +1,8 @@
 const PropertyRepo = require('./property');
 const { getContentCollection, searchRegex } = require('../utils');
 
+const projection = { name: 1 };
+
 module.exports = {
   /**
    *
@@ -23,7 +25,20 @@ module.exports = {
     } else {
       criteria.contentType = 'Company';
     }
-    const cursor = await collection.find(criteria, { name: 1 }).limit(25);
+    const cursor = await collection.find(criteria, { projection }).limit(25);
+    return cursor.toArray();
+  },
+
+  async findByIds(propertyId, ids) {
+    if (!ids.length) return [];
+
+    const { key, baseVersion } = await PropertyRepo.findById(propertyId, {
+      key: 1,
+      baseVersion: 1,
+    });
+    const collection = await getContentCollection(key, baseVersion);
+
+    const cursor = await collection.find({ _id: { $in: ids } }, { projection });
     return cursor.toArray();
   },
 };

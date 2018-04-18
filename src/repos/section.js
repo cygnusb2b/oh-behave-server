@@ -1,6 +1,8 @@
 const PropertyRepo = require('./property');
 const { getSectionCollection, searchRegex } = require('../utils');
 
+const projection = { name: 1, alias: 1 };
+
 module.exports = {
   /**
    *
@@ -17,7 +19,8 @@ module.exports = {
       name: searchRegex(phrase, type),
       status: 1,
     };
-    const cursor = await collection.find(criteria, { name: 1, alias: 1 }).limit(25);
+    if (baseVersion === '3') criteria.type = 'Website';
+    const cursor = await collection.find(criteria, { projection }).limit(25);
     return cursor.toArray();
   },
 };

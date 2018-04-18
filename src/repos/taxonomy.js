@@ -1,6 +1,8 @@
 const PropertyRepo = require('./property');
 const { getTaxonomyCollection, searchRegex } = require('../utils');
 
+const projection = { name: 1, type: 1 };
+
 module.exports = {
   /**
    *
@@ -16,7 +18,7 @@ module.exports = {
     const cursor = await collection.find({
       name: searchRegex(phrase, type),
       status: 1,
-    }, { name: 1, type: 1 }).limit(25);
+    }, { projection }).limit(25);
     return cursor.toArray();
   },
 };
