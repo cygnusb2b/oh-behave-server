@@ -45,6 +45,12 @@ const getContentCollection = (key, version) => {
   return getBaseConn(key, version).collection(dbName, 'Content');
 };
 
+const getSectionCollection = (key, version) => {
+  validate(key, version);
+  const dbName = (version === '4') ? `${key}_website` : getBaseDbName(key, version);
+  return getBaseConn(key, version).collection(dbName, 'Section');
+};
+
 const searchRegex = (phrase, type) => {
   let prefix = '';
   let suffix = '';
@@ -56,5 +62,6 @@ const searchRegex = (phrase, type) => {
 module.exports = {
   getTaxonomyCollection,
   getContentCollection,
+  getSectionCollection,
   searchRegex,
 };

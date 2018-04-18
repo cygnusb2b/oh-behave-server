@@ -1,0 +1,9 @@
+type Query {
+  searchSections(property: String!, phrase: String!): [Section]
+}
+
+type Section {
+  id: Int!
+  name: String!
+  alias: String
+}
