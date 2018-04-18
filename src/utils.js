@@ -1,3 +1,4 @@
+const escapeRegex = require('escape-string-regexp');
 const db = require('./db');
 
 const baseVersions = ['3', '4'];
@@ -39,6 +40,15 @@ const getTaxonomyCollection = (key, version) => {
   return getBaseConn(key, version).collection(dbName, 'Taxonomy');
 };
 
+const searchRegex = (phrase, type) => {
+  let prefix = '';
+  let suffix = '';
+  if (type === 'starts' || type === 'exact') prefix = '^';
+  if (type === 'exact') suffix = '$';
+  return new RegExp(`${prefix}${escapeRegex(phrase)}${suffix}`, 'i');
+};
+
 module.exports = {
   getTaxonomyCollection,
+  searchRegex,
 };
