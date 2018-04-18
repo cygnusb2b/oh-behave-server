@@ -1,0 +1,9 @@
+type Query {
+  searchTaxonomy(property: String!, phrase: String!): [Taxonomy]
+}
+
+type Taxonomy {
+  id: Int!
+  name: String!
+  type: String!
+}
