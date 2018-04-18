@@ -15,7 +15,7 @@ module.exports = {
     /**
      *
      */
-    searchProperties: (root, { property, phrase }, { auth }) => {
+    searchTaxonomy: (root, { property, phrase }, { auth }) => {
       auth.check();
       return TaxonomyRepo.search(property, phrase);
     },
