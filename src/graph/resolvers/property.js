@@ -32,8 +32,7 @@ module.exports = {
     /**
      *
      */
-    allProperties: (root, { pagination, sort }, { auth }) => {
-      auth.check();
+    allProperties: (root, { pagination, sort }) => {
       const criteria = { deleted: false };
       return new Pagination(Property, { pagination, sort, criteria });
     },
