@@ -37,8 +37,9 @@ input PropertySortInput {
 
 input PropertyPayloadInput {
   name: String!
-  website: String
-  description: String
+  key: String!
+  baseVersion: String!
+  userSource: String!
 }
 
 input CreatePropertyInput {
@@ -63,4 +64,9 @@ enum PropertyTypeAheadField {
 type Property {
   id: String!
   name: String!
+  key: String!
+  baseVersion: String!
+  userSource: String!
+  createdAt: Date
+  updatedAt: Date
 }

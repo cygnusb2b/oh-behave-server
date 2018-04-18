@@ -15,10 +15,15 @@ const schema = new Schema({
     required: true,
     default: false,
   },
-  version: {
+  baseVersion: {
     type: String,
     required: true,
     enum: ['3', '4'],
+  },
+  userSource: {
+    type: String,
+    required: true,
+    enum: ['Merrick', 'Components', 'Radix'],
   },
 }, {
   timestamps: true,

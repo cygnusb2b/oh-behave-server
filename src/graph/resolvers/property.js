@@ -59,8 +59,18 @@ module.exports = {
     createProperty: (root, { input }, { auth }) => {
       auth.checkAdmin();
       const { payload } = input;
-      const { name, description, website } = payload;
-      const record = new Property({ name, description, website });
+      const {
+        name,
+        key,
+        baseVersion,
+        userSource,
+      } = payload;
+      const record = new Property({
+        name,
+        key,
+        baseVersion,
+        userSource,
+      });
       return record.save();
     },
 
@@ -70,10 +80,20 @@ module.exports = {
     updateProperty: async (root, { input }, { auth }) => {
       auth.checkAdmin();
       const { id, payload } = input;
-      const { name, description, website } = payload;
+      const {
+        name,
+        key,
+        baseVersion,
+        userSource,
+      } = payload;
       const record = await Property.findOne({ _id: id, deleted: false });
       if (!record) throw new Error(`No property record found for ID ${id}.`);
-      record.set({ name, description, website });
+      record.set({
+        name,
+        key,
+        baseVersion,
+        userSource,
+      });
       return record.save();
     },
 
