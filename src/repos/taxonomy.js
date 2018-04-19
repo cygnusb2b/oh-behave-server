@@ -15,10 +15,13 @@ module.exports = {
     const { key, baseVersion } = await PropertyRepo.findByKey(tenant, { key: 1, baseVersion: 1 });
 
     const collection = await getTaxonomyCollection(key, baseVersion);
-    const cursor = await collection.find({
+    const id = parseInt(phrase, 10);
+    const criteria = id ? { _id: id, status: 1 } : {
       name: searchRegex(phrase, type),
       status: 1,
-    }, { projection }).limit(25);
+    };
+
+    const cursor = await collection.find(criteria, { projection }).limit(25);
     return cursor.toArray();
   },
 

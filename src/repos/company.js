@@ -15,14 +15,15 @@ module.exports = {
     const { key, baseVersion } = await PropertyRepo.findByKey(tenant, { key: 1, baseVersion: 1 });
 
     const collection = await getContentCollection(key, baseVersion);
-
-    const criteria = {
+    const id = parseInt(phrase, 10);
+    const criteria = id ? { _id: id, status: 1 } : {
       name: searchRegex(phrase, type),
       status: 1,
     };
+
     if (baseVersion === '4') {
       criteria.type = 'Company';
-    } else {
+    } else if (baseVersion === '3') {
       criteria.contentType = 'Company';
     }
     const cursor = await collection.find(criteria, { projection }).limit(25);

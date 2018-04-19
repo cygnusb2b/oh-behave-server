@@ -15,7 +15,8 @@ module.exports = {
     const { key, baseVersion } = await PropertyRepo.findByKey(tenant, { key: 1, baseVersion: 1 });
 
     const collection = await getSectionCollection(key, baseVersion);
-    const criteria = {
+    const id = parseInt(phrase, 10);
+    const criteria = id ? { _id: id, status: 1 } : {
       name: searchRegex(phrase, type),
       status: 1,
     };
