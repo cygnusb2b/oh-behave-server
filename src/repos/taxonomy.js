@@ -21,4 +21,18 @@ module.exports = {
     }, { projection }).limit(25);
     return cursor.toArray();
   },
+
+  async findByIds(propertyId, ids) {
+    if (!ids.length) return [];
+
+    const { key, baseVersion } = await PropertyRepo.findById(propertyId, {
+      key: 1,
+      baseVersion: 1,
+    });
+    const collection = await getTaxonomyCollection(key, baseVersion);
+
+    const cursor = await collection.find({ _id: { $in: ids } }, { projection });
+    return cursor.toArray();
+  },
+
 };
