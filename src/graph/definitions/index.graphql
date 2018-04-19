@@ -4,6 +4,7 @@
 # import * from 'company.graphql'
 # import * from 'section.graphql'
 # import * from 'content-query.graphql'
+# import * from 'content-query-result.graphql'
 
 scalar Date
 scalar Cursor

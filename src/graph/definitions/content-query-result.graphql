@@ -1,0 +1,64 @@
+type Query {
+  allContentQueryResults(queryId: String!, pagination: PaginationInput = {}, sort: ContentQueryResultSortInput = {}): ContentQueryResultConnection!
+  contentQueryResult(input: ModelIdInput!): ContentQueryResult!
+}
+
+type Mutation {
+  createContentQueryResult(input: CreateContentQueryResultInput!): ContentQueryResult!
+}
+
+type ContentQueryResultConnection {
+  totalCount: Int!
+  edges: [ContentQueryResultEdge]!
+  pageInfo: PageInfo!
+}
+
+type ContentQueryResultEdge {
+  node: ContentQueryResult!
+  cursor: Cursor!
+}
+
+input ContentQueryResultSortInput {
+  field: ContentQueryResultSortField! = createdAt
+  order: Int! = -1
+}
+
+enum ContentQueryResultSortField {
+  createdAt
+  ranAt
+}
+
+input CreateContentQueryResultInput {
+  payload: ContentQueryResultPayloadInput!
+}
+
+input ContentQueryResultPayloadInput {
+  queryId: String!
+  startDate: Date!
+  endDate: Date!
+  sourceType: ContentQuerySourceType!
+}
+
+enum ContentQuerySourceType {
+  latest
+  archive
+}
+
+type ContentQueryResult {
+  id: String!
+  baseVersion: String!
+  userSource: String!
+  sourceType: ContentQuerySourceType!
+  startDate: Date!
+  endDate: Date!
+  contentCount: Int!
+  contentViews: Int!
+  userCount: Int!
+  foundUserCount: Int!
+  ranBy: User
+  ranAt: Date
+}
+
+type ContentQueryResultTest {
+  contentCount: Int!
+}

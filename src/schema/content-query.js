@@ -1,23 +1,5 @@
 const { Schema } = require('mongoose');
-
-const criteriaSchema = new Schema({
-  type: {
-    type: String,
-    required: true,
-    enum: ['Taxonomy', 'Company', 'Section'],
-  },
-  ids: {
-    type: [Number],
-    required: true,
-    validate: {
-      validator(ids) {
-        if (ids.length) return true;
-        return false;
-      },
-      message: 'The model criteria IDs cannot be empty.',
-    },
-  },
-}, { _id: false });
+const criteriaSchema = require('./content-query/criteria');
 
 const schema = new Schema({
   name: {

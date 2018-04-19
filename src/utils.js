@@ -51,6 +51,37 @@ const getSectionCollection = (key, version) => {
   return getBaseConn(key, version).collection(dbName, 'Section');
 };
 
+const getLatestAnalyticsCollection = (key, version) => {
+  validate(key, version);
+  const dbName = version === '4' ? `oly_${key}_website_events` : `oly_${key}_events`;
+  return db.analytics.collection(dbName, 'content');
+};
+
+const getArchiveAnalyticsCollection = (key) => {
+  validateKey(key);
+  return db.analytics.collection('content_traffic_archive', key);
+};
+
+const getRadixCollection = (key) => {
+  validateKey(key);
+  const dbName = `radix-${key.replace('_', '-')}`;
+  return db.platform.collection(dbName, 'identity');
+};
+
+const getRadixEmailCollection = (key) => {
+  validateKey(key);
+  const dbName = `radix-${key.replace('_', '-')}`;
+  return db.platform.collection(dbName, 'identity-account-email');
+};
+
+const getMerrickUserCollection = () => db.legacy.collection('merrick', 'users_v2');
+
+const getComponentsIdentityCollection = (key) => {
+  validateKey(key);
+  const dbName = `${key}_platform`;
+  return db.platform.collection(dbName, 'Identity');
+};
+
 const searchRegex = (phrase, type) => {
   let prefix = '';
   let suffix = '';
@@ -63,5 +94,11 @@ module.exports = {
   getTaxonomyCollection,
   getContentCollection,
   getSectionCollection,
+  getLatestAnalyticsCollection,
+  getRadixCollection,
+  getRadixEmailCollection,
+  getMerrickUserCollection,
+  getComponentsIdentityCollection,
+  getArchiveAnalyticsCollection,
   searchRegex,
 };
