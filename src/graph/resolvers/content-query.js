@@ -5,6 +5,7 @@ const Pagination = require('../../classes/pagination');
 const CompanyRepo = require('../../repos/company');
 const TaxonomyRepo = require('../../repos/taxonomy');
 const SectionRepo = require('../../repos/section');
+const QueryRepo = require('../../repos/query');
 
 const applyTypes = (type, items) => items.map(item => Object.assign(item, { __typename: type }));
 
@@ -67,9 +68,16 @@ module.exports = {
     /**
      *
      */
-    allContentQueries: (root, { propertyId, pagination, sort }) => {
+    allContentQueries: (root, { propertyId, pagination, sort }, { auth }) => {
+      auth.check();
       const criteria = { propertyId, deleted: false };
       return new Pagination(ContentQuery, { pagination, sort, criteria });
+    },
+
+    testContentQuery: async (root, { input }, { auth }) => {
+      auth.check();
+      const { id } = input;
+      return QueryRepo.test(id);
     },
   },
 
