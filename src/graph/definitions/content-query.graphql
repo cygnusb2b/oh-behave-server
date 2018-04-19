@@ -28,7 +28,7 @@ input ContentQuerySortInput {
 input ContentQueryPayloadInput {
   name: String!
   propertyId: String!
-  criteria: [ContentQueryCriteriaInput]
+  criteria: [ContentQueryCriteriaInput!]!
 }
 
 enum ContentQueryCriteriaModelField {
