@@ -3,6 +3,11 @@ const PropertyRepo = require('./property');
 const { getContentCollection } = require('../utils');
 
 module.exports = {
+  /**
+   *
+   * @param {string} id The content query ID.
+   * @param {?object} fields The model fields to return.
+   */
   async findById(id, fields) {
     if (!id) throw new Error('No query id was provided.');
     const doc = await ContentQuery.findOne({ _id: id, deleted: false }, fields);
@@ -10,15 +15,29 @@ module.exports = {
     return doc;
   },
 
-  async test(id) {
-    const query = await this.findById(id);
-    const result = { contentCount: 0 };
-    if (!query.criteria.length) return result;
+  /**
+   *
+   * @param {string} queryId The content query ID.
+   */
+  async test(queryId) {
+    const contentCount = await this.getContentIds(queryId, true);
+    return { contentCount };
+  },
+
+  /**
+   *
+   * @param {string} queryId The content query ID.
+   * @param {boolean} [countOnly=false] Whether to return a count only, or an array of IDs.
+   */
+  async getContentIds(queryId, countOnly = false) {
+    const query = await this.findById(queryId);
+    if (!query.criteria.length) return countOnly ? 0 : [];
 
     const { key, baseVersion } = await PropertyRepo.findById(query.propertyId, {
       key: 1,
       baseVersion: 1,
     });
+
     const collection = await getContentCollection(key, baseVersion);
     const $and = [];
     query.criteria.forEach((group) => {
@@ -34,11 +53,26 @@ module.exports = {
               { 'relatedTo.$id': { $in: ids } },
             ],
           });
+        } else if (type === 'Section') {
+          if (baseVersion === '4') {
+            $and.push({ 'mutations.Website.primarySection.$id': { $in: ids } });
+          } else {
+            $and.push({ 'primarySection.$id': { $in: ids } });
+          }
         }
       }
     });
     const criteria = { status: 1, $and };
-    result.contentCount = await collection.count(criteria);
-    return result;
+    if (baseVersion === '4') {
+      criteria.type = { $nin: ['Contact', 'Promotion', 'TextAd'] };
+    } else {
+      criteria.contentType = { $nin: ['Contact', 'Image', 'Note', 'PSCAd', 'TextAd'] };
+    }
+    if (countOnly) {
+      const count = await collection.count(criteria);
+      return count;
+    }
+    const cursor = await collection.find(criteria, { projection: { _id: 1 } });
+    return cursor.toArray();
   },
 };
