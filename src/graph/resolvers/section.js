@@ -6,6 +6,7 @@ module.exports = {
    */
   Section: {
     id: section => section._id,
+    alias: section => section.alias || 'none',
   },
 
   /**
