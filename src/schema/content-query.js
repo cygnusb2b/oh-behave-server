@@ -1,6 +1,6 @@
 const { Schema } = require('mongoose');
 
-const crtieriaSchema = new Schema({
+const criteriaSchema = new Schema({
   type: {
     type: String,
     required: true,
@@ -17,7 +17,7 @@ const crtieriaSchema = new Schema({
       message: 'The model criteria IDs cannot be empty.',
     },
   },
-});
+}, { _id: false });
 
 const schema = new Schema({
   name: {
@@ -36,7 +36,7 @@ const schema = new Schema({
     default: false,
   },
   criteria: {
-    type: [crtieriaSchema],
+    type: [criteriaSchema],
     required: true,
   },
   createdById: {
