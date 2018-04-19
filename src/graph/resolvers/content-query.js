@@ -58,8 +58,8 @@ module.exports = {
      */
     contentQuery: async (root, { input }, { auth }) => {
       auth.check();
-      const { id } = input;
-      const record = await ContentQuery.findOne({ _id: id, deleted: false });
+      const { propertyId, id } = input;
+      const record = await ContentQuery.findOne({ _id: id, propertyId, deleted: false });
       if (!record) throw new Error(`No query record found for ID ${id}.`);
       return record;
     },
@@ -67,8 +67,8 @@ module.exports = {
     /**
      *
      */
-    allContentQueries: (root, { pagination, sort }) => {
-      const criteria = { deleted: false };
+    allContentQueries: (root, { propertyId, pagination, sort }) => {
+      const criteria = { propertyId, deleted: false };
       return new Pagination(ContentQuery, { pagination, sort, criteria });
     },
   },

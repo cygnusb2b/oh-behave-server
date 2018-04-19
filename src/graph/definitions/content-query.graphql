@@ -1,12 +1,17 @@
 type Query {
-  allContentQueries(pagination: PaginationInput = {}, sort: ContentQuerySortInput = {}): ContentQueryConnection!
-  contentQuery(input: ModelIdInput!): ContentQuery!
+  allContentQueries(propertyId: String!, pagination: PaginationInput = {}, sort: ContentQuerySortInput = {}): ContentQueryConnection!
+  contentQuery(input: ContentQueryInput!): ContentQuery!
 }
 
 type Mutation {
   createContentQuery(input: CreateContentQueryInput!): ContentQuery!
   updateContentQuery(input: UpdateContentQueryInput!): ContentQuery!
   deleteContentQuery(input: ModelIdInput!): String!
+}
+
+input ContentQueryInput {
+  id: String!
+  propertyId: String!
 }
 
 type ContentQueryConnection {
