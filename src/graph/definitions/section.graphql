@@ -1,5 +1,5 @@
 type Query {
-  searchSections(property: String!, phrase: String!): [Section]
+  searchSections(propertyId: String!, phrase: String!): [Section]
 }
 
 type Section {

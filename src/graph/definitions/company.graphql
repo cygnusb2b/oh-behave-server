@@ -1,5 +1,5 @@
 type Query {
-  searchCompanies(property: String!, phrase: String!): [Company]
+  searchCompanies(propertyId: String!, phrase: String!): [Company]
 }
 
 type Company {

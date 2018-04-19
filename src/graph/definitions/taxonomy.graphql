@@ -1,5 +1,5 @@
 type Query {
-  searchTaxonomy(property: String!, phrase: String!): [Taxonomy]
+  searchTaxonomy(propertyId: String!, phrase: String!): [Taxonomy]
 }
 
 type Taxonomy {

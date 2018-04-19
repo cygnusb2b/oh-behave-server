@@ -6,13 +6,16 @@ const projection = { name: 1 };
 module.exports = {
   /**
    *
-   * @param {string} tenant The property key, e.g. `cygnus_ofcr`.
+   * @param {string} propertyId The property ID.
    * @param {string} phrase The search phrase.
    * @param {string} [type=contains] The search type. Either `starts`, `exact` or `contains`.
    */
-  async search(tenant, phrase, type = 'contains') {
+  async search(propertyId, phrase, type = 'contains') {
     if (!phrase) throw new Error('No search phrase was provided.');
-    const { key, baseVersion } = await PropertyRepo.findByKey(tenant, { key: 1, baseVersion: 1 });
+    const { key, baseVersion } = await PropertyRepo.findById(propertyId, {
+      key: 1,
+      baseVersion: 1,
+    });
 
     const collection = await getContentCollection(key, baseVersion);
     const id = parseInt(phrase, 10);

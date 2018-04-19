@@ -16,9 +16,9 @@ module.exports = {
     /**
      *
      */
-    searchSections: (root, { property, phrase }, { auth }) => {
+    searchSections: (root, { propertyId, phrase }, { auth }) => {
       auth.check();
-      return SectionRepo.search(property, phrase);
+      return SectionRepo.search(propertyId, phrase);
     },
   },
 };

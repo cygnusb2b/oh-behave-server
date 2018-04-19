@@ -15,9 +15,9 @@ module.exports = {
     /**
      *
      */
-    searchCompanies: (root, { property, phrase }, { auth }) => {
+    searchCompanies: (root, { propertyId, phrase }, { auth }) => {
       auth.check();
-      return CompanyRepo.search(property, phrase);
+      return CompanyRepo.search(propertyId, phrase);
     },
   },
 };
