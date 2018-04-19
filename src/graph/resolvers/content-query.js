@@ -3,6 +3,10 @@ const User = require('../../models/user');
 const paginationResolvers = require('./pagination');
 const Pagination = require('../../classes/pagination');
 const CompanyRepo = require('../../repos/company');
+const TaxonomyRepo = require('../../repos/taxonomy');
+const SectionRepo = require('../../repos/section');
+
+const applyTypes = (type, items) => items.map(item => Object.assign(item, { __typename: type }));
 
 module.exports = {
   /**
@@ -15,12 +19,21 @@ module.exports = {
       const { criteria } = query;
       const data = await Promise.all(criteria.map(async (group) => {
         const { type, ids } = group;
+        let items;
         switch (type) {
           case 'Company':
-            return CompanyRepo.findByIds(query.propertyId, ids);
+            items = await CompanyRepo.findByIds(query.propertyId, ids);
+            break;
+          case 'Taxonomy':
+            items = await TaxonomyRepo.findByIds(query.propertyId, ids);
+            break;
+          case 'Section':
+            items = await SectionRepo.findByIds(query.propertyId, ids);
+            break;
           default:
-            return [];
+            items = [];
         }
+        return { type, items: applyTypes(type, items) };
       }));
       return data;
     },
