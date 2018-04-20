@@ -1,4 +1,3 @@
-const moment = require('moment');
 const ContentQuery = require('../models/content-query');
 const ContentQueryResult = require('../models/content-query-result');
 const ContentQueryResultRow = require('../models/content-query-result-row');
@@ -12,6 +11,8 @@ const {
   getComponentsIdentityCollection,
   getArchiveAnalyticsCollection,
 } = require('../utils');
+
+const { assign } = Object;
 
 module.exports = {
   /**
@@ -41,6 +42,14 @@ module.exports = {
     return { contentCount };
   },
 
+  /**
+   * @param {object} params
+   * @param {string} params.queryId
+   * @param {Date} params.startDate
+   * @param {Date} params.endDate
+   * @param {string} params.sourceType The raw analytics data source, either `latest` or `archive`.
+   * @param {string} userId The User running the query.
+   */
   async run({
     queryId,
     startDate,
@@ -56,7 +65,7 @@ module.exports = {
 
     const result = new ContentQueryResult({
       queryId,
-      criteria: query.criteria,
+      criteria: query.criteria, // Save this for posterity. ⌛
       startDate,
       endDate,
       baseVersion,
@@ -65,25 +74,29 @@ module.exports = {
       ranById: userId,
       ranAt: new Date(),
     });
+    // Find content matching the query criteria.
     const contentIds = await this.getContentIds(query, key, baseVersion);
     result.contentCount = contentIds.length;
 
-    // Ensure result is valid before continuing.
+    // Ensure result is valid before continuing. ✅
     await result.validate();
-    // Nothing to query. Return.
+    // No content. Nothing to query. Save and return. 💾
     if (!result.contentCount) return result.save();
 
-    let data = {};
+    let data;
     if (result.sourceType === 'latest') {
+      // Run query using data from the last 30 days. 📅
       data = await this.runLatestAggregation(result, key, baseVersion, contentIds);
     } else if (result.sourceType === 'archive') {
+      // Run query using data from the monthly aggregated archive. 🗓️
       data = await this.runArchiveAggregation(result, key, contentIds);
+    } else {
+      throw new Error(`Unable to handle source type '${result.sourceType}'`);
     }
-
-    console.info(data);
 
     const { userCount, contentViews, userIds } = data;
     result.set({ userCount, contentViews });
+    // No users. Nothing to query. Save and return. 💾
     if (!userCount) return result.save();
 
     let users = [];
@@ -93,15 +106,20 @@ module.exports = {
       users = await this.retrieveMerrickRows(userIds, key);
     } else if (userSource === 'Components') {
       users = await this.retrieveComponentRows(userIds, key);
+    } else {
+      throw new Error(`Unable to process user source '${userSource}'`);
     }
 
     result.foundUserCount = users.length;
     await result.save();
     const resultId = result.id;
     if (users.length) {
-      await ContentQueryResultRow.insertMany(users.map(u => Object.assign(u, { resultId })));
+      // Insert individual users/rows.
+      // This archives the results for future use,
+      // regardless of changes to the property (e.g. the account moves from B3 to B4).
+      // Also, apply the result ID so we can query later. 😜
+      await ContentQueryResultRow.insertMany(users.map(u => assign(u, { resultId })));
     }
-
     return result;
   },
 
@@ -205,17 +223,12 @@ module.exports = {
 
   async runArchiveAggregation({ startDate, endDate }, propertyKey, contentIds) {
     const collection = await getArchiveAnalyticsCollection(propertyKey);
-    console.info(startDate, endDate);
-    const start = moment(startDate.valueOf()).startOf('month').toDate();
-    const end = moment(endDate.valueOf()).startOf('month').toDate();
-    console.info(start, end);
-
     const pipeline = [
       {
         $match: {
           'metadata.month': {
-            $gte: start,
-            $lte: end,
+            $gte: startDate,
+            $lte: endDate,
           },
           'metadata.contentId': { $in: contentIds },
           'metadata.userId': { $exists: true },
