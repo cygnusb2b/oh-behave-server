@@ -111,6 +111,7 @@ module.exports = {
     }
 
     result.foundUserCount = users.length;
+    // Save our result. 💾
     await result.save();
     const resultId = result.id;
     if (users.length) {
@@ -123,6 +124,12 @@ module.exports = {
     return result;
   },
 
+  /**
+   * Retrieves rows from the "Components" user store.
+   *
+   * @param {array} userIds The user IDs to query.
+   * @param {string} properyKey The property key, e.g. `cygnus_fhc`.
+   */
   async retrieveComponentRows(userIds, propertyKey) {
     const collection = await getComponentsIdentityCollection(propertyKey);
     const cursor = await collection.find({
@@ -137,6 +144,11 @@ module.exports = {
     }, []);
   },
 
+  /**
+   * Retrieves rows from the "Merrick" user store.
+   *
+   * @param {array} userIds The user IDs to query.
+   */
   async retrieveMerrickRows(userIds) {
     const collection = await getMerrickUserCollection();
     const cursor = await collection.find({
@@ -150,12 +162,24 @@ module.exports = {
     }, []);
   },
 
+  /**
+   * Retrieves rows from the "Radix" user store.
+   *
+   * @param {array} userIds The user IDs to query.
+   * @param {string} properyKey The property key, e.g. `cygnus_fhc`.
+   */
   async retrieveRadixRows(userIds, propertyKey) {
     const accounts = await this.getRadixAccountRows(userIds, propertyKey);
     const identites = await this.getRadixIdentityRows(userIds, propertyKey);
     return [].concat(accounts, identites);
   },
 
+  /**
+   * Retrieves rows from the "Radix Account" user store.
+   *
+   * @param {array} userIds The user IDs to query.
+   * @param {string} properyKey The property key, e.g. `cygnus_fhc`.
+   */
   async getRadixAccountRows(userIds, propertyKey) {
     const collection = await getRadixEmailCollection(propertyKey);
     const cursor = await collection.find({
@@ -169,6 +193,12 @@ module.exports = {
     }, []);
   },
 
+  /**
+   * Retrieves rows from the "Radix Identity" user store.
+   *
+   * @param {array} userIds The user IDs to query.
+   * @param {string} properyKey The property key, e.g. `cygnus_fhc`.
+   */
   async getRadixIdentityRows(userIds, propertyKey) {
     const collection = await getRadixCollection(propertyKey);
     const cursor = await collection.find({
@@ -184,7 +214,19 @@ module.exports = {
     }, []);
   },
 
-
+  /**
+   * Retrieves users, in the form of IDs, who have interacted
+   * with the provided content, over the selected date range.
+   *
+   * Utilizes the `latest` event database - over the last 30 days.
+   *
+   * @param {object} params
+   * @param {Date} params.startDate
+   * @param {Date} params.endDate
+   * @param {string} properyKey The property key, e.g. `cygnus_fhc`.
+   * @param {string} baseVersion The version of BASE, e.g. `3` or `4`.
+   * @param {array} contentIds The content IDs to find events for.
+   */
   async runLatestAggregation({ startDate, endDate }, propertyKey, baseVersion, contentIds) {
     const collection = await getLatestAnalyticsCollection(propertyKey, baseVersion);
 
@@ -221,6 +263,19 @@ module.exports = {
     return { userCount: 0, userIds: [], contentViews: 0 };
   },
 
+  /**
+   * Retrieves users, in the form of IDs, who have interacted
+   * with the provided content, over the selected date range.
+   *
+   * Utilizes the `archive` event database - since the beginning of time.
+   *
+   * @param {object} params
+   * @param {Date} params.startDate
+   * @param {Date} params.endDate
+   * @param {string} properyKey The property key, e.g. `cygnus_fhc`.
+   * @param {string} baseVersion The version of BASE, e.g. `3` or `4`.
+   * @param {array} contentIds The content IDs to find events for.
+   */
   async runArchiveAggregation({ startDate, endDate }, propertyKey, contentIds) {
     const collection = await getArchiveAnalyticsCollection(propertyKey);
     const pipeline = [
