@@ -68,6 +68,7 @@
     "graphql-import": "^0.4.5",
     "graphql-tools": "^2.21.0",
     "helmet": "^3.11.0",
+    "inflection": "^1.12.0",
     "jsonwebtoken": "^8.2.1",
     "moment": "^2.22.1",
     "mongodb": "^3.0.3",
@@ -75,6 +76,7 @@
     "passport": "^0.4.0",
     "passport-http-bearer": "^1.0.1",
     "redis": "^2.8.0",
+    "slug": "^0.9.1",
     "uuid": "^3.2.1",
     "validator": "^9.4.1"
   }
