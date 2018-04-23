@@ -1,0 +1,31 @@
+type Query {
+  allContentQueryExports(resultId: String!, pagination: PaginationInput = {}, sort: ContentQueryExportSortInput = {}): ContentQueryExportConnection!
+}
+
+type ContentQueryExportConnection {
+  totalCount: Int!
+  edges: [ContentQueryExportEdge]!
+  pageInfo: PageInfo!
+}
+
+type ContentQueryExportEdge {
+  node: ContentQueryExport!
+  cursor: Cursor!
+}
+
+input ContentQueryExportSortInput {
+  field: ContentQueryExportSortField! = exportedAt
+  order: Int! = -1
+}
+
+enum ContentQueryExportSortField {
+  createdAt
+  exportedAt
+}
+
+type ContentQueryExport {
+  id: String!
+  exportedAt: Date!
+  exportedBy: User!
+}
+

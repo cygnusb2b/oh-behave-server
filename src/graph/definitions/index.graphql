@@ -6,6 +6,7 @@
 # import * from 'content-query.graphql'
 # import * from 'content-query-result.graphql'
 # import * from 'content-query-result-row.graphql'
+# import * from 'content-query-export.graphql'
 
 scalar Date
 scalar Cursor

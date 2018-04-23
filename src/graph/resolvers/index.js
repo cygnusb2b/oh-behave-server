@@ -7,6 +7,7 @@ const taxonomy = require('./taxonomy');
 const company = require('./company');
 const section = require('./section');
 const contentQuery = require('./content-query');
+const contentQueryExport = require('./content-query-export');
 const contentQueryResult = require('./content-query-result');
 const contentQueryResultRow = require('./content-query-result-row');
 
@@ -17,6 +18,7 @@ module.exports = deepAssign(
   company,
   section,
   contentQuery,
+  contentQueryExport,
   contentQueryResult,
   contentQueryResultRow,
   {
