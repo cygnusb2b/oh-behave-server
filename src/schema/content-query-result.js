@@ -1,11 +1,21 @@
 const { Schema } = require('mongoose');
+const moment = require('moment-timezone');
 const criteriaSchema = require('./content-query/criteria');
+const pushId = require('unique-push-id');
 
 const schema = new Schema({
   queryId: {
     type: Schema.Types.ObjectId,
     required: true,
     ref: 'content-query',
+  },
+  shortId: {
+    type: String,
+    required: true,
+    unique: true,
+    default() {
+      return pushId();
+    },
   },
   criteria: {
     // A cloned copy of the query's criteria for history.
@@ -67,6 +77,15 @@ const schema = new Schema({
     required: true,
     default: false,
   },
+});
+
+schema.virtual('shortName').get(function getShortName() {
+  const start = moment(this.startDate).tz('America/Chicago');
+  const end = moment(this.endDate).tz('America/Chicago');
+  if (this.sourceType === 'archive') {
+    return `${start.format('YYYY-MM')} to ${end.format('YYYY-MM')}`;
+  }
+  return `${start.format('YYYY-MM-DD')} to ${end.format('YYYY-MM-DD')}`;
 });
 
 schema.index({ deleted: 1 });
