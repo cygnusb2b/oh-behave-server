@@ -1,0 +1,33 @@
+type Query {
+  allContentQueryResultRows(resultId: String!, pagination: PaginationInput = {}, sort: ContentQueryResultRowSortInput = {}): ContentQueryResultRowConnection!
+  contentQueryResultRow(input: ModelIdInput!): ContentQueryResultRow!
+}
+
+type ContentQueryResultRowConnection {
+  totalCount: Int!
+  edges: [ContentQueryResultRowEdge]!
+  pageInfo: PageInfo!
+}
+
+type ContentQueryResultRowEdge {
+  node: ContentQueryResultRow!
+  cursor: Cursor!
+}
+
+input ContentQueryResultRowSortInput {
+  field: ContentQueryResultRowSortField! = createdAt
+  order: Int! = -1
+}
+
+enum ContentQueryResultRowSortField {
+  createdAt
+  email
+}
+
+type ContentQueryResultRow {
+  id: String!
+  sourceId: String!
+  email: String!
+  result: ContentQueryResult!
+}
+

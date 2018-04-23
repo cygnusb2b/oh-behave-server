@@ -15,5 +15,7 @@ const schema = new Schema({
 });
 
 schema.index({ resultId: 1 });
+schema.index({ email: 1, _id: 1 }, { unique: true });
+schema.index({ email: -1, _id: -1 }, { unique: true });
 
 module.exports = schema;

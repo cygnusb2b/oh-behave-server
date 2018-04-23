@@ -8,6 +8,7 @@ const company = require('./company');
 const section = require('./section');
 const contentQuery = require('./content-query');
 const contentQueryResult = require('./content-query-result');
+const contentQueryResultRow = require('./content-query-result-row');
 
 module.exports = deepAssign(
   property,
@@ -17,6 +18,7 @@ module.exports = deepAssign(
   section,
   contentQuery,
   contentQueryResult,
+  contentQueryResultRow,
   {
     Date: DateType,
     Cursor: CursorType,
