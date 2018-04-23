@@ -57,6 +57,7 @@ type ContentQueryResult {
   foundUserCount: Int!
   ranBy: User
   ranAt: Date
+  exports: [ContentQueryExport]
 }
 
 type ContentQueryResultTest {

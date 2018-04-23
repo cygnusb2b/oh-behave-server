@@ -1,4 +1,5 @@
 const ContentQueryResult = require('../../models/content-query-result');
+const ContentQueryExport = require('../../models/content-query-export');
 const User = require('../../models/user');
 const paginationResolvers = require('./pagination');
 const Pagination = require('../../classes/pagination');
@@ -9,7 +10,8 @@ module.exports = {
    *
    */
   ContentQueryResult: {
-    ranBy: query => User.findOne({ _id: query.ranById }),
+    ranBy: result => User.findOne({ _id: result.ranById }),
+    exports: result => ContentQueryExport.find({ resultId: result.id }).sort({ exportedAt: -1 }),
   },
 
   /**
