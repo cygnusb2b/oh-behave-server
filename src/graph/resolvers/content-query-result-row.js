@@ -29,7 +29,7 @@ module.exports = {
      *
      */
     contentQueryResultRow: async (root, { input }, { auth }) => {
-      auth.check();
+      auth.checkMember();
       const { id } = input;
       const record = await ContentQueryResultRow.findOne({ _id: id });
       if (!record) throw new Error(`No query record found for ID ${id}.`);
@@ -40,7 +40,7 @@ module.exports = {
      *
      */
     allContentQueryResultRows: (root, { resultId, pagination, sort }, { auth }) => {
-      auth.check();
+      auth.checkMember();
       const criteria = { resultId };
       return new Pagination(ContentQueryResultRow, { pagination, sort, criteria });
     },

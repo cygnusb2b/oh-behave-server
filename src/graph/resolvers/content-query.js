@@ -107,7 +107,7 @@ module.exports = {
      *
      */
     updateContentQuery: async (root, { input }, { auth }) => {
-      auth.check();
+      auth.checkAdmin();
       const { user } = auth;
       const { id, payload } = input;
       const { name, propertyId, critiera } = payload;
@@ -130,7 +130,7 @@ module.exports = {
      *
      */
     deleteContentQuery: async (root, { input }, { auth }) => {
-      auth.check();
+      auth.checkAdmin();
       const { user } = auth;
       const { id } = input;
       const record = await ContentQuery.findOne({ _id: id });

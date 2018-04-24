@@ -21,7 +21,7 @@ router.get('/:resultId', handleAsync(async (req, res) => {
 
   const { user, session } = await UserRepo.retrieveSession(bearer);
   const auth = new Auth({ user, session });
-  auth.check();
+  auth.checkMember();
 
   const result = await ContentQueryResult.findOne({ _id: resultId });
   if (!result) throw new Error(`No query result found for ID '${resultId}'`);
