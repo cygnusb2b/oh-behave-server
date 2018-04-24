@@ -28,7 +28,7 @@ module.exports = {
     /**
      *
      */
-    allContentQueryExports: (root, { resultId, pagination, sort }, { auth }) => {
+    allExportsForQueryResult: (root, { resultId, pagination, sort }, { auth }) => {
       auth.check();
       const criteria = { resultId };
       return new Pagination(ContentQueryExport, { pagination, sort, criteria });

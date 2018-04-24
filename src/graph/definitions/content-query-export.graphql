@@ -1,5 +1,5 @@
 type Query {
-  allContentQueryExports(resultId: String!, pagination: PaginationInput = {}, sort: ContentQueryExportSortInput = {}): ContentQueryExportConnection!
+  allExportsForQueryResult(resultId: String!, pagination: PaginationInput = {}, sort: ContentQueryExportSortInput = {}): ContentQueryExportConnection!
 }
 
 type ContentQueryExportConnection {
