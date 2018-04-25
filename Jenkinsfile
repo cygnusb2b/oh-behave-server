@@ -46,12 +46,12 @@ node {
       stage('Notify Upgrade') {
         slackSend color: 'good', message: "Finished deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View>)"
       }
-      // stage('Notify NewRelic') {
-      //   sh "curl -X POST 'https://api.newrelic.com/v2/applications/107862887/deployments.json' \
-      //     -H 'X-Api-Key:7f58b04fa716469c1243e499c79ca89202b2ac355b0d092' -i \
-      //     -H 'Content-Type: application/json' \
-      //     -d '{ \"deployment\": { \"revision\": \"${env.BUILD_NUMBER}\", \"user\": \"jenkins\" } }'"
-      // }
+      stage('Notify NewRelic') {
+        sh "curl -X POST 'https://api.newrelic.com/v2/applications/113663175/deployments.json' \
+          -H 'X-Api-Key:7f58b04fa716469c1243e499c79ca89202b2ac355b0d092' -i \
+          -H 'Content-Type: application/json' \
+          -d '{ \"deployment\": { \"revision\": \"${env.BUILD_NUMBER}\", \"user\": \"jenkins\" } }'"
+      }
     } catch (e) {
       slackSend color: 'bad', message: "Failed deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View>)"
       throw e
