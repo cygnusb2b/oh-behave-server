@@ -107,18 +107,21 @@ module.exports = {
      *
      */
     updateContentQuery: async (root, { input }, { auth }) => {
-      auth.checkAdmin();
+      auth.check();
       const { user } = auth;
       const { id, payload } = input;
-      const { name, propertyId, critiera } = payload;
+      const { name, propertyId, criteria } = payload;
 
       const record = await ContentQuery.findOne({ _id: id, deleted: false });
       if (!record) throw new Error(`No query record found for ID ${id}.`);
+      if (record.propertyId.toString() !== propertyId) {
+        throw new Error('You cannot switch properties.');
+      }
       if (auth.isAdmin() || user.id === record.createdById) {
         record.set({
           name,
           propertyId,
-          critiera,
+          criteria,
           updatedById: user.id,
         });
         return record.save();
@@ -130,7 +133,7 @@ module.exports = {
      *
      */
     deleteContentQuery: async (root, { input }, { auth }) => {
-      auth.checkAdmin();
+      auth.check();
       const { user } = auth;
       const { id } = input;
       const record = await ContentQuery.findOne({ _id: id });
