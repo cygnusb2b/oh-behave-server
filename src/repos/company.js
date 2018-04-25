@@ -1,5 +1,10 @@
 const PropertyRepo = require('./property');
-const { getContentCollection, searchRegex, isIdentifier } = require('../utils');
+const {
+  getContentCollection,
+  searchRegex,
+  isIdentifier,
+  castId,
+} = require('../utils');
 
 const projection = { name: 1 };
 
@@ -18,7 +23,7 @@ module.exports = {
     });
 
     const collection = await getContentCollection(key, baseVersion);
-    const criteria = isIdentifier(phrase) ? { _id: phrase, status: 1 } : {
+    const criteria = isIdentifier(phrase) ? { _id: castId(phrase), status: 1 } : {
       name: searchRegex(phrase, type),
       status: 1,
     };

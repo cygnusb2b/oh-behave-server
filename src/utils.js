@@ -1,4 +1,5 @@
 const escapeRegex = require('escape-string-regexp');
+const { ObjectID } = require('mongodb');
 const db = require('./db');
 
 const baseVersions = ['3', '4'];
@@ -91,6 +92,12 @@ const searchRegex = (phrase, type) => {
 };
 
 const isIdentifier = value => /^[0-9]{1,}$|^[0-9a-f]{24}$/.test(value);
+const castId = (value) => {
+  if (/^[0-9]{1,}$/.test(value)) return parseInt(value, 10);
+  if (/^[0-9a-f]{24}$/.test(value)) return ObjectID(value);
+  return value;
+};
+
 
 module.exports = {
   getTaxonomyCollection,
@@ -104,4 +111,5 @@ module.exports = {
   getArchiveAnalyticsCollection,
   searchRegex,
   isIdentifier,
+  castId,
 };
