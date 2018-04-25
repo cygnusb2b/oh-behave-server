@@ -1,5 +1,5 @@
 const PropertyRepo = require('./property');
-const { getSectionCollection, searchRegex } = require('../utils');
+const { getSectionCollection, searchRegex, isIdentifier } = require('../utils');
 
 const projection = { name: 1, alias: 1 };
 
@@ -18,8 +18,7 @@ module.exports = {
     });
 
     const collection = await getSectionCollection(key, baseVersion);
-    const id = parseInt(phrase, 10);
-    const criteria = id ? { _id: id, status: 1 } : {
+    const criteria = isIdentifier(phrase) ? { _id: phrase, status: 1 } : {
       name: searchRegex(phrase, type),
       status: 1,
     };

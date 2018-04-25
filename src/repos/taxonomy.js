@@ -1,5 +1,5 @@
 const PropertyRepo = require('./property');
-const { getTaxonomyCollection, searchRegex } = require('../utils');
+const { getTaxonomyCollection, searchRegex, isIdentifier } = require('../utils');
 
 const projection = { name: 1, type: 1 };
 
@@ -18,8 +18,7 @@ module.exports = {
     });
 
     const collection = await getTaxonomyCollection(key, baseVersion);
-    const id = parseInt(phrase, 10);
-    const criteria = id ? { _id: id, status: 1 } : {
+    const criteria = isIdentifier(phrase) ? { _id: phrase, status: 1 } : {
       name: searchRegex(phrase, type),
       status: 1,
     };

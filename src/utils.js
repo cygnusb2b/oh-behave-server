@@ -90,6 +90,8 @@ const searchRegex = (phrase, type) => {
   return new RegExp(`${prefix}${escapeRegex(phrase)}${suffix}`, 'i');
 };
 
+const isIdentifier = value => /^[0-9]{1,}$|^[0-9a-f]{24}$/.test(value);
+
 module.exports = {
   getTaxonomyCollection,
   getContentCollection,
@@ -101,4 +103,5 @@ module.exports = {
   getComponentsIdentityCollection,
   getArchiveAnalyticsCollection,
   searchRegex,
+  isIdentifier,
 };
