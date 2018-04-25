@@ -81,5 +81,18 @@
     "unique-push-id": "^1.0.2",
     "uuid": "^3.2.1",
     "validator": "^9.4.1"
+  },
+  "nyc": {
+    "check-coverage": false,
+    "per-file": true,
+    "reporter": [
+      "text",
+      "cobertura"
+    ],
+    "all": true,
+    "cache": false,
+    "include": [
+      "src/**/*.js"
+    ]
   }
 }
