@@ -6,15 +6,26 @@ services:
       - ../:/app:cached
       - node_modules:/app/node_modules
     depends_on:
+      - analytics
       - mongo
+      - redis
     entrypoint: yarn run test:run
     environment:
       NODE_ENV: test
       MONGO_DSN: mongodb://mongo:27017/oh-behave
+      LEGACY_DSN: mongodb://analytics:27017
+      ANALYTICS_DSN: mongodb://analytics:27017
+      PLATFORM_DSN: mongodb://analytics:27017
       REDIS_DSN: redis://redis:6379/0
       PORT: 8200
-  mongo:
+  redis:
+    image: redis:alpine
+  analytics:
     image: mongo:3.4
+    volumes:
+      - analytics:/data/db
+  mongo:
+    image: mongo:3.6
     volumes:
       - mongodb:/data/db
 
@@ -24,6 +35,11 @@ volumes:
       io.as3.appname: "oh-behave-server"
       io.as3.env: "test"
   mongodb:
+    labels:
+      io.as3.appname: "oh-behave-server"
+      io.as3.discard: "true"
+      io.as3.env: "test"
+  analytics:
     labels:
       io.as3.appname: "oh-behave-server"
       io.as3.discard: "true"
