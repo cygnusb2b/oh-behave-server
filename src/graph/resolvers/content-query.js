@@ -117,7 +117,7 @@ module.exports = {
       if (record.propertyId.toString() !== propertyId) {
         throw new Error('You cannot switch properties.');
       }
-      if (auth.isAdmin() || user.id === record.createdById) {
+      if (auth.isAdmin() || `${user.id}` === `${record.createdById}`) {
         record.set({
           name,
           propertyId,
@@ -138,7 +138,7 @@ module.exports = {
       const { id } = input;
       const record = await ContentQuery.findOne({ _id: id });
       if (!record) throw new Error(`No property record found for ID ${id}.`);
-      if (auth.isAdmin() || user.id === record.createdById) {
+      if (auth.isAdmin() || `${user.id}` === `${record.createdById}`) {
         record.set({ deleted: true, updatedById: user.id });
         return record.save();
       }
