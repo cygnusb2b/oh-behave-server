@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const Promise = require('bluebird');
-const sessionRepo = require('./session');
+const sessionService = require('../services/session');
 const User = require('../models/user');
+const ApiKey = require('../models/api-key');
 
 module.exports = {
   create(payload = {}) {
@@ -64,19 +65,49 @@ module.exports = {
     await this.verifyPassword(password, user.get('password'));
 
     // Create session.
-    const session = await sessionRepo.set({ uid: user.id });
+    const session = await sessionService.set({ uid: user.id, method: 'password', expires: 86400 });
 
     // Update login info
     await this.updateLoginInfo(user);
     return { user, session };
   },
 
+  /**
+   * Logs in via the API.
+   *
+   * @param {*} uuid
+   */
+  async createApiSession(uuid) {
+    const user = await this.findApiUser(uuid);
+    const session = await sessionService.set({ uid: user.id, method: 'api', expires: 3600 });
+    return { user, session };
+  },
+
+  /**
+   * Retrieves a user and session for the provided token.
+   *
+   * @param {*} token
+   */
   async retrieveSession(token) {
-    const session = await sessionRepo.get(token);
+    const session = await sessionService.verify(token);
     // Ensure user still exists/refresh the user data.
     const user = await this.findById(session.uid);
     if (!user || user.deleted) throw new Error('Unable to retrieve session: the provided user could not be found.');
     return { user, session };
+  },
+
+  /**
+   * Finds a user based on any assigned API keys.
+   *
+   * @param {string} uuid The API key.
+   */
+  async findApiUser(uuid) {
+    if (!uuid) throw new Error('Unable to find user: No API key was provided.');
+    const apiKey = await ApiKey.findOne({ key: uuid });
+    if (!apiKey) throw new Error(`Unable to find user: No API key found for '${uuid}'`);
+    const user = await User.findOne({ _id: apiKey.userId });
+    if (!user || user.deleted) throw new Error('Unable to find user: No user found for the provided API key');
+    return user;
   },
 
   /**

@@ -9,15 +9,16 @@ type Mutation {
   createUser(input: CreateUserInput!): User
   updateUser(input: UpdateUserInput!): User
   deleteUser(input: ModelIdInput!): String!
-  loginUser(input: LoginInput!): Authentication
+  loginUser(input: LoginInput!): Authentication!
+  createApiSession(input: ApiSessionInput!): Authentication!
   deleteSession: String
   changeUserPassword(input: ChangeUserPasswordInput!): User
   updateCurrentUserProfile(input: CurrentUserProfileInput!): User
 }
 
 type Session {
-  id: String!
   uid: String!
+  method: String!
   cre: Int!
   exp: Int!
   token: String!
@@ -114,4 +115,8 @@ input SessionTokenInput {
 input LoginInput {
   email: String!
   password: String!
+}
+
+input ApiSessionInput {
+  key: String!
 }
