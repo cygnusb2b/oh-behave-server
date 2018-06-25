@@ -1,6 +1,6 @@
 const UserRepo = require('../../repos/user');
 const User = require('../../models/user');
-const SessionRepo = require('../../repos/session');
+const sessionService = require('../../services/session');
 const Pagination = require('../../classes/pagination');
 const paginationResolvers = require('./pagination');
 
@@ -127,9 +127,17 @@ module.exports = {
     /**
      *
      */
+    createApiSession: (root, { input }) => {
+      const { key } = input;
+      return UserRepo.createApiSession(key);
+    },
+
+    /**
+     *
+     */
     deleteSession: async (root, args, { auth }) => {
       if (auth.isValid()) {
-        await SessionRepo.delete(auth.session);
+        await sessionService.delete(auth.session);
       }
       return 'ok';
     },
