@@ -79,6 +79,12 @@ module.exports = {
       const { id } = input;
       return QueryRepo.test(id);
     },
+
+    contentQueryIds: async (root, { input }, { auth }) => {
+      auth.check();
+      const { id } = input;
+      return QueryRepo.contentIds(id);
+    },
   },
 
   /**

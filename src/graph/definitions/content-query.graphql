@@ -2,6 +2,7 @@ type Query {
   allContentQueries(propertyId: String!, pagination: PaginationInput = {}, sort: ContentQuerySortInput = {}): ContentQueryConnection!
   contentQuery(input: ContentQueryInput!): ContentQuery!
   testContentQuery(input: ModelIdInput!): ContentQueryTest!
+  contentQueryIds(input: ModelIdInput!): [Int]
 }
 
 type Mutation {

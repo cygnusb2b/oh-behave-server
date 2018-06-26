@@ -43,6 +43,20 @@ module.exports = {
   },
 
   /**
+   * Returns all content IDs for the provided query.
+   *
+   * @param {string} queryId The content query ID.
+   */
+  async contentIds(queryId) {
+    const query = await this.findById(queryId);
+    const { key, baseVersion } = await PropertyRepo.findById(query.propertyId, {
+      key: 1,
+      baseVersion: 1,
+    });
+    return this.getContentIds(query, key, baseVersion);
+  },
+
+  /**
    * @param {object} params
    * @param {string} params.queryId
    * @param {Date} params.startDate
