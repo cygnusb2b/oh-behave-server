@@ -41,7 +41,7 @@ node {
         }
       }
       stage('Upgrade Container') {
-        rancher confirm: true, credentialId: 'rancher', endpoint: 'https://rancher.as3.io/v2-beta', environmentId: '1a18', image: "664537616798.dkr.ecr.us-east-1.amazonaws.com/oh-behave-server:v${env.BUILD_NUMBER}", service: 'oh-behave/server', environments: '', ports: '', timeout: 180
+        rancher confirm: true, credentialId: 'rancher-production', endpoint: 'https://rancher.as3.io/v2-beta', environmentId: '1a42893', image: "664537616798.dkr.ecr.us-east-1.amazonaws.com/oh-behave-server:v${env.BUILD_NUMBER}", service: 'oh-behave/server', environments: '', ports: '', timeout: 180
       }
       stage('Notify Upgrade') {
         slackSend color: 'good', message: "Finished deploying ${env.JOB_NAME} #${env.BUILD_NUMBER} (<${env.BUILD_URL}|View>)"
