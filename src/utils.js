@@ -66,13 +66,13 @@ const getArchiveAnalyticsCollection = (key) => {
 const getRadixCollection = (key) => {
   validateKey(key);
   const dbName = `radix-${key.replace('_', '-')}`;
-  return db.platform.collection(dbName, 'identity');
+  return db.radix.collection(dbName, 'identity');
 };
 
 const getRadixEmailCollection = (key) => {
   validateKey(key);
   const dbName = `radix-${key.replace('_', '-')}`;
-  return db.platform.collection(dbName, 'identity-account-email');
+  return db.radix.collection(dbName, 'identity-account-email');
 };
 
 const getMerrickUserCollection = () => db.legacy.collection('merrick', 'users_v2');
