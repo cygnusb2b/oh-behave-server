@@ -17,6 +17,7 @@ services:
       ANALYTICS_DSN: mongodb://analytics:27017
       PLATFORM_DSN: mongodb://analytics:27017
       REDIS_DSN: redis://redis:6379/0
+      RADIX_DSN: mongodb://analytics:27017
       PORT: 8200
   redis:
     image: redis:alpine
