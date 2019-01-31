@@ -22,6 +22,7 @@ services:
       LEGACY_DSN: ${LEGACY_DSN}
       ANALYTICS_DSN: ${ANALYTICS_DSN}
       PLATFORM_DSN: ${PLATFORM_DSN}
+      RADIX_DSN: ${RADIX_DSN}
   redis:
     image: redis:alpine
   mongo:
