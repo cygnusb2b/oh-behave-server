@@ -63,12 +63,14 @@ module.exports = {
         key,
         baseVersion,
         userSource,
+        stack,
       } = payload;
       const record = new Property({
         name,
         key,
         baseVersion,
         userSource,
+        stack,
       });
       return record.save();
     },
@@ -84,6 +86,7 @@ module.exports = {
         key,
         baseVersion,
         userSource,
+        stack,
       } = payload;
       const record = await Property.findOne({ _id: id, deleted: false });
       if (!record) throw new Error(`No property record found for ID ${id}.`);
@@ -92,6 +95,7 @@ module.exports = {
         key,
         baseVersion,
         userSource,
+        stack,
       });
       return record.save();
     },
