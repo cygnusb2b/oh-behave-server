@@ -15,7 +15,9 @@ services:
       MONGO_DSN: mongodb://mongo:27017/oh-behave
       LEGACY_DSN: mongodb://analytics:27017
       ANALYTICS_DSN: mongodb://analytics:27017
-      PLATFORM_DSN: mongodb://analytics:27017
+      AERILON_DSN: mongodb://analytics:27017
+      PICON_DSN: mongodb://analytics:27017
+      CAPRICA_DSN: mongodb://analytics:27017
       REDIS_DSN: redis://redis:6379/0
       RADIX_DSN: mongodb://analytics:27017
       PORT: 8200
