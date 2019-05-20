@@ -33,12 +33,13 @@ module.exports = {
    */
   async test(queryId) {
     const query = await this.findById(queryId);
-    const { key, baseVersion } = await PropertyRepo.findById(query.propertyId, {
+    const { key, baseVersion, stack } = await PropertyRepo.findById(query.propertyId, {
       key: 1,
       baseVersion: 1,
+      stack: 1,
     });
 
-    const contentCount = await this.getContentIds(query, key, baseVersion, true);
+    const contentCount = await this.getContentIds(query, key, baseVersion, true, stack);
     return { contentCount };
   },
 
@@ -49,11 +50,12 @@ module.exports = {
    */
   async contentIds(queryId) {
     const query = await this.findById(queryId);
-    const { key, baseVersion } = await PropertyRepo.findById(query.propertyId, {
+    const { key, baseVersion, stack } = await PropertyRepo.findById(query.propertyId, {
       key: 1,
       baseVersion: 1,
+      stack: 1,
     });
-    return this.getContentIds(query, key, baseVersion);
+    return this.getContentIds(query, key, baseVersion, false, stack);
   },
 
   /**
@@ -71,10 +73,16 @@ module.exports = {
     sourceType,
   }, userId) {
     const query = await this.findById(queryId);
-    const { key, baseVersion, userSource } = await PropertyRepo.findById(query.propertyId, {
+    const {
+      key,
+      baseVersion,
+      userSource,
+      stack,
+    } = await PropertyRepo.findById(query.propertyId, {
       key: 1,
       baseVersion: 1,
       userSource: 1,
+      stack: 1,
     });
 
     const result = new ContentQueryResult({
@@ -89,7 +97,7 @@ module.exports = {
       ranAt: new Date(),
     });
     // Find content matching the query criteria.
-    const contentIds = await this.getContentIds(query, key, baseVersion);
+    const contentIds = await this.getContentIds(query, key, baseVersion, false, stack);
     result.contentCount = contentIds.length;
 
     // Ensure result is valid before continuing. ✅
@@ -100,7 +108,7 @@ module.exports = {
     let data;
     if (result.sourceType === 'latest') {
       // Run query using data from the last 30 days. 📅
-      data = await this.runLatestAggregation(result, key, baseVersion, contentIds);
+      data = await this.runLatestAggregation(result, key, baseVersion, contentIds, stack);
     } else if (result.sourceType === 'archive') {
       // Run query using data from the monthly aggregated archive. 🗓️
       data = await this.runArchiveAggregation(result, key, contentIds);
@@ -241,8 +249,8 @@ module.exports = {
    * @param {string} baseVersion The version of BASE, e.g. `3` or `4`.
    * @param {array} contentIds The content IDs to find events for.
    */
-  async runLatestAggregation({ startDate, endDate }, propertyKey, baseVersion, contentIds) {
-    const collection = await getLatestAnalyticsCollection(propertyKey, baseVersion);
+  async runLatestAggregation({ startDate, endDate }, propertyKey, baseVersion, contentIds, stack) {
+    const collection = await getLatestAnalyticsCollection(propertyKey, baseVersion, stack);
 
     const pipeline = [
       {
@@ -329,10 +337,10 @@ module.exports = {
    * @param {string} queryId The content query ID.
    * @param {boolean} [countOnly=false] Whether to return a count only, or an array of IDs.
    */
-  async getContentIds(query, propertyKey, baseVersion, countOnly = false) {
+  async getContentIds(query, propertyKey, baseVersion, countOnly = false, stack) {
     if (!query.criteria.length) return countOnly ? 0 : [];
 
-    const collection = await getContentCollection(propertyKey, baseVersion);
+    const collection = await getContentCollection(propertyKey, baseVersion, stack);
     const $and = [];
     query.criteria.forEach((group) => {
       const { type, ids } = group;

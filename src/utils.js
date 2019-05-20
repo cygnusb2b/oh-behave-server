@@ -11,49 +11,55 @@ const validateKey = (key) => {
   return true;
 };
 
-const validateVersion = (v) => {
+const validateStack = (stack) => {
+  if (!db[stack]) throw new Error(`No database connection was found for stack '${stack}'`);
+  return true;
+};
+
+const validateVersion = (v, stack) => {
   if (!supportsVersion(v)) {
     throw new Error(`The provided Base version of '${v}' is not supported.`);
   }
+  if (v === '4') validateStack(stack);
   return true;
 };
 
-const validate = (key, version) => {
+const validate = (key, version, stack) => {
   validateKey(key);
-  validateVersion(version);
+  validateVersion(version, stack);
   return true;
 };
 
-const getBaseConn = (key, version) => {
-  validate(key, version);
-  if (version === '4') return db.platform;
+const getBaseConn = (key, version, stack) => {
+  validate(key, version, stack);
+  if (version === '4') return db[stack];
   return db.legacy;
 };
 
-const getBaseDbName = (key, version) => {
-  validate(key, version);
+const getBaseDbName = (key, version, stack) => {
+  validate(key, version, stack);
   if (version === '4') return `${key}_platform`;
   return `base_${key}`;
 };
 
-const getTaxonomyCollection = (key, version) => {
-  const dbName = getBaseDbName(key, version);
-  return getBaseConn(key, version).collection(dbName, 'Taxonomy');
+const getTaxonomyCollection = (key, version, stack) => {
+  const dbName = getBaseDbName(key, version, stack);
+  return getBaseConn(key, version, stack).collection(dbName, 'Taxonomy');
 };
 
-const getContentCollection = (key, version) => {
-  const dbName = getBaseDbName(key, version);
-  return getBaseConn(key, version).collection(dbName, 'Content');
+const getContentCollection = (key, version, stack) => {
+  const dbName = getBaseDbName(key, version, stack);
+  return getBaseConn(key, version, stack).collection(dbName, 'Content');
 };
 
-const getSectionCollection = (key, version) => {
-  validate(key, version);
-  const dbName = (version === '4') ? `${key}_website` : getBaseDbName(key, version);
-  return getBaseConn(key, version).collection(dbName, 'Section');
+const getSectionCollection = (key, version, stack) => {
+  validate(key, version, stack);
+  const dbName = (version === '4') ? `${key}_website` : getBaseDbName(key, version, stack);
+  return getBaseConn(key, version, stack).collection(dbName, 'Section');
 };
 
-const getLatestAnalyticsCollection = (key, version) => {
-  validate(key, version);
+const getLatestAnalyticsCollection = (key, version, stack) => {
+  validate(key, version, stack);
   const dbName = version === '4' ? `oly_${key}_website_events` : `oly_${key}_events`;
   return db.analytics.collection(dbName, 'content');
 };

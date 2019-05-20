@@ -40,6 +40,7 @@ input PropertyPayloadInput {
   key: String!
   baseVersion: String!
   userSource: String!
+  stack: String
 }
 
 input CreatePropertyInput {
@@ -67,6 +68,7 @@ type Property {
   key: String!
   baseVersion: String!
   userSource: String!
+  stack: String
   createdAt: Date
   updatedAt: Date
 }

@@ -1,36 +1,58 @@
-version: '3'
+version: '3.7'
+
+x-env-defaults: &env
+  YARN_CACHE_FOLDER: /.yarn-cache
+  NODE_ENV: development
+
+x-node-defaults: &node
+  tty: true
+  init: true
+  image: node:8
+  entrypoint: ["node"]
+  working_dir: /app
+  volumes:
+      - .:/app:cached
+      - ./node_modules:/app/node_modules:delegated
+
 services:
   app:
-    tty: true
-    build: .
+    <<: *node
     ports:
       - "${SERVER_APP_PORT-8266}:8266"
-    volumes:
-      - .:/app:cached
-      - node_modules:/app/node_modules
     depends_on:
       - mongo
       - redis
     restart: on-failure
     entrypoint: node_modules/.bin/gulp
     environment:
-      NODE_ENV: development
-      MONGO_DSN: mongodb://mongo:27017/oh-behave
-      REDIS_DSN: redis://redis:6379/0
+      <<: *env
+      MONGO_DSN: ${MONGO_DSN-mongodb://mongo:27017/oh-behave}
+      REDIS_DSN: ${REDIS_DSN-redis://redis:6379/0}
       PORT: ${SERVER_APP_PORT-8266}
       DEBUG: ${DEBUG}
-      LEGACY_DSN: ${LEGACY_DSN}
+      AERILON_DSN: ${AERILON_DSN}
       ANALYTICS_DSN: ${ANALYTICS_DSN}
-      PLATFORM_DSN: ${PLATFORM_DSN}
+      CAPRICA_DSN: ${CAPRICA_DSN}
+      LEGACY_DSN: ${LEGACY_DSN}
+      PICON_DSN: ${PICON_DSN}
       RADIX_DSN: ${RADIX_DSN}
+
+  commands:
+    <<: *node
+    environment:
+      <<: *env
+    entrypoint: ["tail"]
+    command: ["-f", "/dev/null"]
+
   redis:
     image: redis:alpine
+
   mongo:
     image: mongo:3.6
     volumes:
       - mongodb:/data/db
     ports:
       - "${SERVER_DB_PORT-8267}:27017"
+
 volumes:
-  node_modules: {}
   mongodb: {}

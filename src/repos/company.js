@@ -17,12 +17,13 @@ module.exports = {
    */
   async search(propertyId, phrase, type = 'contains') {
     if (!phrase) throw new Error('No search phrase was provided.');
-    const { key, baseVersion } = await PropertyRepo.findById(propertyId, {
+    const { key, baseVersion, stack } = await PropertyRepo.findById(propertyId, {
       key: 1,
       baseVersion: 1,
+      stack: 1,
     });
 
-    const collection = await getContentCollection(key, baseVersion);
+    const collection = await getContentCollection(key, baseVersion, stack);
     const criteria = isIdentifier(phrase) ? { _id: castId(phrase), status: 1 } : {
       name: searchRegex(phrase, type),
       status: 1,
@@ -40,11 +41,12 @@ module.exports = {
   async findByIds(propertyId, ids) {
     if (!ids.length) return [];
 
-    const { key, baseVersion } = await PropertyRepo.findById(propertyId, {
+    const { key, baseVersion, stack } = await PropertyRepo.findById(propertyId, {
       key: 1,
       baseVersion: 1,
+      stack: 1,
     });
-    const collection = await getContentCollection(key, baseVersion);
+    const collection = await getContentCollection(key, baseVersion, stack);
 
     const cursor = await collection.find({ _id: { $in: ids } }, { projection });
     return cursor.toArray();
