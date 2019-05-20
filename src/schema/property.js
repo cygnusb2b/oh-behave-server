@@ -25,6 +25,10 @@ const schema = new Schema({
     required: true,
     enum: ['Merrick', 'Components', 'Radix'],
   },
+  stack: {
+    type: String,
+    enum: ['aerilon', 'picon', 'caprica'],
+  },
 }, {
   timestamps: true,
 });
