@@ -68,11 +68,11 @@ jobs:
     #############################
 
     - <<: *production-job
-      name: Server
-      script: scripts/deploy.js server
+      name: GraphQL Service
+      script: scripts/deploy.js graphql
     # - <<: *staging-job
-    #   name: Server Service
-    #   script: scripts/deploy.js server
+    #   name: GraphQL Service
+    #   script: scripts/deploy.js graphql
 
     #############################
     # ^^^ ADD SERVICES HERE ^^^ #

@@ -46,7 +46,7 @@ const shouldBuild = async (image) => {
 
 if (TRAVIS_TAG !== version) error(`Tagged version ${TRAVIS_TAG} differs from lerna version ${version}, aborting!`);
 
-const name = 'oh-behave-server';
+const name = 'oh-behave-graphql';
 const image = `endeavorb2b/${name}-service`;
 
 const docker = async (args = []) => {
@@ -55,7 +55,7 @@ const docker = async (args = []) => {
 };
 
 const build = async () => {
-  const imageTag = `server:${version}`;
+  const imageTag = `graphql:${version}`;
   log(`Building  ${image}:${version}...\n`);
   const Dockerfile = join(process.cwd(), 'Dockerfile');
   await spawnSync('cp', [Dockerfile, process.cwd()]);
