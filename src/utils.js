@@ -33,7 +33,7 @@ const validate = (key, version, stack) => {
 const getBaseConn = (key, version, stack) => {
   validate(key, version, stack);
   if (version === '4') return db[stack];
-  return db.legacy;
+  throw new Error('Legacy replicaset no longer available.');
 };
 
 const getBaseDbName = (key, version, stack) => {
@@ -81,8 +81,6 @@ const getRadixEmailCollection = (key) => {
   return db.radix.collection(dbName, 'identity-account-email');
 };
 
-const getMerrickUserCollection = () => db.legacy.collection('merrick', 'users_v2');
-
 const getComponentsIdentityCollection = (key) => {
   validateKey(key);
   const dbName = `${key}_platform`;
@@ -112,7 +110,6 @@ module.exports = {
   getLatestAnalyticsCollection,
   getRadixCollection,
   getRadixEmailCollection,
-  getMerrickUserCollection,
   getComponentsIdentityCollection,
   getArchiveAnalyticsCollection,
   searchRegex,

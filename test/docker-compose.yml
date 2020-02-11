@@ -13,7 +13,6 @@ services:
     environment:
       NODE_ENV: test
       MONGO_DSN: mongodb://mongo:27017/oh-behave
-      LEGACY_DSN: mongodb://analytics:27017
       ANALYTICS_DSN: mongodb://analytics:27017
       AERILON_DSN: mongodb://analytics:27017
       PICON_DSN: mongodb://analytics:27017
