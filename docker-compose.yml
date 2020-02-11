@@ -30,12 +30,11 @@ services:
       REDIS_DSN: ${REDIS_DSN-redis://redis:6379/0}
       PORT: ${SERVER_APP_PORT-8266}
       DEBUG: ${DEBUG}
-      AERILON_DSN: ${AERILON_DSN}
-      ANALYTICS_DSN: ${ANALYTICS_DSN}
-      CAPRICA_DSN: ${CAPRICA_DSN}
-      LEGACY_DSN: ${LEGACY_DSN}
-      PICON_DSN: ${PICON_DSN}
-      RADIX_DSN: ${RADIX_DSN}
+      AERILON_DSN: ${AERILON_DSN-mongodb://mongo:27017}
+      ANALYTICS_DSN: ${ANALYTICS_DSN-mongodb://mongo:27017}
+      CAPRICA_DSN: ${CAPRICA_DSN-mongodb://mongo:27017}
+      PICON_DSN: ${PICON_DSN-mongodb://mongo:27017}
+      RADIX_DSN: ${RADIX_DSN-mongodb://mongo:27017}
 
   commands:
     <<: *node

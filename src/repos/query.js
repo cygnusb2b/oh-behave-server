@@ -7,7 +7,6 @@ const {
   getLatestAnalyticsCollection,
   getRadixCollection,
   getRadixEmailCollection,
-  getMerrickUserCollection,
   getComponentsIdentityCollection,
   getArchiveAnalyticsCollection,
 } = require('../utils');
@@ -124,8 +123,6 @@ module.exports = {
     let users = [];
     if (userSource === 'Radix') {
       users = await this.retrieveRadixRows(userIds, key);
-    } else if (userSource === 'Merrick') {
-      users = await this.retrieveMerrickRows(userIds, key);
     } else if (userSource === 'Components') {
       users = await this.retrieveComponentRows(userIds, key);
     } else {
@@ -157,24 +154,6 @@ module.exports = {
     const cursor = await collection.find({
       _id: { $in: userIds },
       email: { $exists: true },
-    }, { projection: { email: 1 } });
-
-    const results = await cursor.toArray();
-    return results.reduce((rows, doc) => {
-      rows.push({ sourceId: doc._id, email: doc.email });
-      return rows;
-    }, []);
-  },
-
-  /**
-   * Retrieves rows from the "Merrick" user store.
-   *
-   * @param {array} userIds The user IDs to query.
-   */
-  async retrieveMerrickRows(userIds) {
-    const collection = await getMerrickUserCollection();
-    const cursor = await collection.find({
-      _id: { $in: userIds },
     }, { projection: { email: 1 } });
 
     const results = await cursor.toArray();
